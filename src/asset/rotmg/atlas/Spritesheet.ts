@@ -2,9 +2,9 @@ import { AssetContainer, Metadata } from "asset/normal/AssetContainer";
 import { BasicTexture, Texture } from "../data/Texture";
 
 // export enum Atlases {
-// 	"https://www.haizor.net/rotmg/assets/production/atlases/groundTiles.png" = 1,
-// 	"https://www.haizor.net/rotmg/assets/production/atlases/characters.png" = 2,
-// 	"https://www.haizor.net/rotmg/assets/production/atlases/mapObjects.png" = 4
+// 	"https://rotmg-mirror.github.io/rotmg-metadata/assets/production/atlases/groundTiles.png" = 1,
+// 	"https://rotmg-mirror.github.io/rotmg-metadata/assets/production/atlases/characters.png" = 2,
+// 	"https://rotmg-mirror.github.io/rotmg-metadata/assets/production/atlases/mapObjects.png" = 4
 // }
 
 const DefaultAtlases = {
@@ -121,7 +121,7 @@ export class Spritesheet implements AssetContainer<Sprite | Sprite[]> {
 
 	constructor(gl?: WebGLRenderingContext, settings?: any) {
 		this.gl = gl;
-		const root = settings?.atlasRoot ?? "https://www.haizor.net/rotmg/assets/production/atlases/";
+		const root = settings?.atlasRoot ?? "https://rotmg-mirror.github.io/rotmg-metadata/assets/production/atlases/";
 		for (const [key, value] of Object.entries(DefaultAtlases)) {
 			this.atlases[key] = root + value;
 		}

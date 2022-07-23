@@ -23,7 +23,7 @@ A library for automating parsing of Realm of the Mad God XML & spritesheets.
 				},
 				
 				sources: [
-					"https://www.haizor.net/rotmg/assets/production/xml/equip.xml"
+					"https://rotmg-mirror.github.io/rotmg-metadata/assets/production/xml/equip.xml"
 				]
 			}
 		]

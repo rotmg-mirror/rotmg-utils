@@ -24,11 +24,11 @@ beforeEach(() => {
 				},
 				
 				sources: [
-					"https://www.haizor.net/rotmg/assets/production/xml/equip.xml",
-					"https://www.haizor.net/rotmg/assets/production/xml/dyes.xml",
-					"https://www.haizor.net/rotmg/assets/production/xml/textiles.xml",
+					"https://rotmg-mirror.github.io/rotmg-metadata/assets/production/xml/equip.xml",
+					"https://rotmg-mirror.github.io/rotmg-metadata/assets/production/xml/dyes.xml",
+					"https://rotmg-mirror.github.io/rotmg-metadata/assets/production/xml/textiles.xml",
 
-					"https://www.haizor.net/rotmg/assets/production/xml/equipmentsets.xml"
+					"https://rotmg-mirror.github.io/rotmg-metadata/assets/production/xml/equipmentsets.xml"
 				]
 			}
 		]
