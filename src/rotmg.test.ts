@@ -47,6 +47,7 @@ describe("Equipment", () => {
 		expect(object.numProjectiles).toEqual(1);
 		expect(object.subAttacks).toStrictEqual([]);
 		expect(object.feedPower).toBe(4);
+		expect(object.labels[0]).toBe("EQUIPMENT");
 	})
 	test("Lightning", () => {
 		const scepter = manager.get("rotmg", "Scepter of Storms")?.value as Equipment;

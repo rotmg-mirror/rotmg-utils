@@ -109,6 +109,16 @@ export const EffectInfoData: DataController<EffectInfo[]> = {
 	}
 }
 
+export const LabelsData: DataController<string[]> = {
+	serialize(input) {
+		return {"#text": input.join(",")};
+	},
+	deserialize(input: any) {
+		if (input === undefined || typeof input !== "string") return [];
+		return input.split(",");
+	}
+}
+
 export class Equipment extends XMLObject {
 	@Data("SlotType", XMLEnum(SlotType))
 	slotType: SlotType = SlotType.None;
@@ -172,6 +182,9 @@ export class Equipment extends XMLObject {
 	description?: string = undefined;
 	@Data("ExtraTooltipData", EffectInfoData)
 	extraTooltipData: EffectInfo[] = [];
+
+	@Data("Labels", LabelsData)
+	labels: string[] = [];
 
 	set?: EquipmentSet;
 
