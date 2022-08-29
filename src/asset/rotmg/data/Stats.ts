@@ -17,6 +17,9 @@ export class Stats {
 	vit: number = 0;
 	wis: number = 0;
 
+	// Relative Stats
+	statRelativeToMap: RelativeStatMap = {};
+
 	getAttacksPerSecond() {
 		return 1.5 + 6.5 * (this.dex / 75);
 	}
@@ -59,16 +62,30 @@ export class Stats {
 		return Math.floor(currDef);
 	}
 
-	add(stats: Stats): Stats {
+	add(stats: Stats, base?: Stats): Stats {
 		const newStats = new Stats();
-		newStats.hp = this.hp + stats.hp;
-		newStats.mp = this.mp + stats.mp;
-		newStats.atk = this.atk + stats.atk;
-		newStats.dex = this.dex + stats.dex;
-		newStats.spd = this.spd + stats.spd;
-		newStats.def = this.def + stats.def;
-		newStats.vit = this.vit + stats.vit;
-		newStats.wis = this.wis + stats.wis;
+		newStats.hp = this.relativeAddHelper("MAXHP", stats, base);
+		newStats.mp = this.relativeAddHelper("MAXMP", stats, base);
+		newStats.atk = this.relativeAddHelper("ATT", stats, base);
+		newStats.dex = this.relativeAddHelper("DEX", stats, base);
+		newStats.spd = this.relativeAddHelper("SPD", stats, base);
+		newStats.def = this.relativeAddHelper("DEF", stats, base);
+		newStats.vit = this.relativeAddHelper("VIT", stats, base);
+		newStats.wis = this.relativeAddHelper("WIS", stats, base);
+		return newStats;
+	}
+
+	private relativeAddHelper(statType: StatType, stats: Stats, base?: Stats) {
+		const statName = Stats.convertStatName(statType)
+		const relativeStatName = stats.statRelativeToMap[statType] ? Stats.convertStatName(stats.statRelativeToMap[statType]) : undefined;
+		const result = this[statName] + (relativeStatName && base ? Math.round(stats[statName] / 100 * base[relativeStatName]) : stats[statName]);
+		return result;
+	}
+
+	// Internal function for use with joining relative statmaps.
+	_join(stats: Stats) {
+		const newStats = this.add(stats)
+		newStats.statRelativeToMap = {...stats.statRelativeToMap, ...newStats.statRelativeToMap, ...this.statRelativeToMap}
 		return newStats;
 	}
 
@@ -139,6 +156,10 @@ export class Stats {
 		const stat = xml["@_stat"];
 		const increment = xml["#text"] === "IncrementStat" || xml["#text"] === "StatBoostAura";
 		const amount = xml["@_amount"] * (increment ? 1 : -1);
+
+		const statRelativeTo = xml["@_statRelativeTo"] as StatType | undefined;
+		if (statRelativeTo) stats.statRelativeToMap[stat] = statRelativeTo;
+
 		switch(stat) {
 			case "MAXHP":
 				stats.hp += amount;
@@ -168,7 +189,7 @@ export class Stats {
 		return stats;
 	}
 
-	static convertStatName(stat: string) {
+	static convertStatName(stat: StatType) {
 		switch(stat) {
 			case "MAXHP":
 				return "hp";
@@ -190,6 +211,10 @@ export class Stats {
 	}
 }
 
+export type RelativeStatMap = {
+	[k in StatType]?: StatType;
+};
+
 const StatsData: DataController<Stats> = {
 	serialize: (value: Stats) => value.serialize(),
 	deserialize: (value: any) => {
@@ -197,7 +222,7 @@ const StatsData: DataController<Stats> = {
 		const values = Array.isArray(value) ? value : [value];
 		let stats = new Stats();
 		for (const stat of values) {
-			stats = stats.add(Stats.fromXML(stat));
+			stats = stats._join(Stats.fromXML(stat));
 		}
 		return stats;
 	}

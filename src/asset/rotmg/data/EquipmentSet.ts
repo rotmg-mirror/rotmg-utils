@@ -25,7 +25,7 @@ export class EquipmentSet {
 	@Data("ActivateOnEquipAll", ActivateData("ActivateOnEquipAll"), {isConstructed: true})
 	activateOnEquipAll: Activate[] = [];
 
-	getStats(equipment: (Equipment | undefined)[]) {
+	getStats(equipment: (Equipment | undefined)[], base?: Stats) {
 		let equipCount = 0;
 		for (let equip of equipment) {
 			if (equip !== undefined && this.setpieces.findIndex(piece => piece.type === equip.type) !== -1) {
@@ -36,38 +36,38 @@ export class EquipmentSet {
 		let stats = new Stats();
 
 		if (equipCount > 1) {
-			stats = stats.add(EquipmentSet.statsFromActivates(this.activateOnEquip2));
+			stats = stats.add(EquipmentSet.statsFromActivates(this.activateOnEquip2, base));
 		}
 
 		if (equipCount > 2) {
-			stats = stats.add(EquipmentSet.statsFromActivates(this.activateOnEquip3));
+			stats = stats.add(EquipmentSet.statsFromActivates(this.activateOnEquip3, base));
 		}
 
 		if (equipCount > 3) {
-			stats = stats.add(EquipmentSet.statsFromActivates(this.activateOnEquipAll));
+			stats = stats.add(EquipmentSet.statsFromActivates(this.activateOnEquipAll, base));
 		}
 
 		return stats;
 	}
 
-	static statsFromActivates(activates: Activate[]) {
+	static statsFromActivates(activates: Activate[], base?: Stats) {
 		let stats = new Stats();
 
 		for (const activate of activates) {
 			if (activate instanceof IncrementStat) {
-				stats = stats.add(activate.stats);
+				stats = stats.add(activate.stats, base);
 			}
 		}
 		
 		return stats;
 	}
 
-	static getTotalStatsForSets(equipment: (Equipment | undefined)[]) {
+	static getTotalStatsForSets(equipment: (Equipment | undefined)[], base?: Stats) {
 		let processedTypes = [];
 		let stats = new Stats();
 		for (const equip of equipment) {
 			if (equip !== undefined && equip.set !== undefined && !processedTypes.includes(equip.set.type)) {
-				stats = stats.add(equip.set.getStats(equipment));
+				stats = stats.add(equip.set.getStats(equipment, base));
 				processedTypes.push(equip.set.type);
 			}
 		}

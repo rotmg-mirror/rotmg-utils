@@ -69,9 +69,23 @@ describe("Equipment", () => {
 		expect(harp.set?.getStats([harp, fanfare]).dex).toEqual(3)
 
 		const splitStats = EquipmentSet.getTotalStatsForSets([harp, fanfare, robe, ring]);
-
 		expect(splitStats.hp).toEqual(45);
 		expect(splitStats.dex).toEqual(6);
+
+	})
+	test("Relative Equipment Set", () => {
+		const dagger = manager.get("rotmg", "AssassinST0")?.value as Equipment;
+		const parasitic_concoction = manager.get("rotmg", "AssassinST1")?.value as Equipment;
+		const rags = manager.get("rotmg", "AssassinST2")?.value as Equipment;
+		const ring = manager.get("rotmg", "AssassinST3")?.value as Equipment;
+
+		expect(dagger.set).toBeDefined();
+		expect(dagger.set?.getStats([dagger, parasitic_concoction]).vit).toEqual(6)
+
+		const splitStats = EquipmentSet.getTotalStatsForSets([dagger, parasitic_concoction, rags, ring]);
+
+		// expect(splitStats.hp).toEqual(45);
+		// expect(splitStats.dex).toEqual(6);
 
 	})
 	test("Subattacks", () => {
